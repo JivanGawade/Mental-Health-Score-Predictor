@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MindMetric AI — Student Mental Health Score Predictor</title>
+  <meta name="description" content="MindMetric AI is an educational machine learning project that estimates a student mental health score from lifestyle, academic and social media usage patterns.">
+  <meta name="theme-color" content="#4F46E5">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%234F46E5'/%3E%3Cpath d='M8 21l5-6 4 3 6-8' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#prediction">Skip to the prediction form</a>
+
+  <!-- Inline SVG icon sprite (no external icon library). Referenced with <use href="#i-name"> -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-logo" viewBox="0 0 24 24">
+      <path d="M9.5 4.5a3 3 0 0 0-3 3 3 3 0 0 0-1.5 5.2 3.3 3.3 0 0 0 3 4.8h1.5z"/>
+      <path d="M14.5 4.5a3 3 0 0 1 3 3 3 3 0 0 1 1.5 5.2 3.3 3.3 0 0 1-3 4.8h-1.5z"/>
+      <path d="M12 8.5v10M9 19.5h6"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h16M8 16v-4M12 16V8M16 16v-6"/></symbol>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h4l2.5-6 4 12 2.5-6H22"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 17a8 8 0 1 1 16 0M12 17l4-5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.5-3 8-7 9.5-4-1.5-7-5-7-9.5V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5L2.5 20h19z"/><path d="M12 10v4.5M12 17.5v.01"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v4.5h4.5"/></symbol>
+  </svg>
+
+  <!-- A. Navigation -->
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="MindMetric AI, go to home">
+        <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-logo"/></svg></span>
+        <span class="brand-name">MindMetric AI</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
+        <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+        <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+
+      <nav class="nav-menu" id="nav-menu" aria-label="Main">
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#prediction">Prediction</a></li>
+        </ul>
+        <a class="btn btn-primary btn-sm" href="#prediction">Start Prediction</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- B. Hero -->
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <h1 id="hero-title" data-enter style="--d:0">Discover the Patterns Behind Student Well-Being</h1>
+          <p class="lead" data-enter style="--d:1">
+            MindMetric AI uses machine learning to estimate a mental health score from lifestyle,
+            academic and social media usage patterns. It is built to help students and researchers
+            explore how everyday habits relate to well-being, not to diagnose anyone.
+          </p>
+          <div class="cta-row" data-enter style="--d:2">
+            <a class="btn btn-primary" href="#prediction">Predict My Score
+              <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <a class="btn btn-secondary" href="#how-it-works">Explore How It Works</a>
+          </div>
+          <ul class="hero-points" data-enter style="--d:3">
+            <li><span class="point-icon"><svg class="icon" aria-hidden="true"><use href="#i-cpu"/></svg></span>ML-Powered Insights</li>
+            <li><span class="point-icon"><svg class="icon" aria-hidden="true"><use href="#i-wave"/></svg></span>Lifestyle Pattern Analysis</li>
+            <li><span class="point-icon"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></span>Student Well-Being Awareness</li>
+          </ul>
+        </div>
+
+        <figure class="hero-figure">
+          <!-- Abstract illustration. It shows the idea (habit signals -> model -> score), never real data. -->
+          <svg class="hero-art" viewBox="0 0 520 400" role="img" aria-labelledby="art-title art-desc">
+            <title id="art-title">Habit signals flowing into a machine learning model</title>
+            <desc id="art-desc">Four wavy lines labelled Sleep, Study, Activity and Screen time flow into a central model node, which feeds a score placeholder. No real data is shown.</desc>
+            <defs>
+              <linearGradient id="artGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#4F46E5"/><stop offset="1" stop-color="#14B8A6"/>
+              </linearGradient>
+            </defs>
+            <rect class="art-panel" x="8" y="8" width="504" height="384" rx="28"/>
+
+            <g class="art-label">
+              <text x="36" y="66">Sleep</text>
+              <text x="36" y="131">Study</text>
+              <text x="36" y="196">Activity</text>
+              <text x="36" y="261">Screen time</text>
+            </g>
+
+            <g class="art-lines" fill="none" stroke-linecap="round">
+              <path class="l1" pathLength="1" d="M36 86 C70 66 90 106 124 86 S180 66 214 86 S250 96 262 86"/>
+              <path class="l2" pathLength="1" d="M36 151 C60 151 76 126 104 138 S150 176 186 151 S240 131 262 151"/>
+              <path class="l3" pathLength="1" d="M36 216 C70 232 84 196 124 214 S176 236 212 214 S250 206 262 216"/>
+              <path class="l4" pathLength="1" d="M36 281 C56 261 84 301 116 281 S176 261 204 283 S248 291 262 281"/>
+              <path class="join" pathLength="1" d="M262 86 C288 86 284 180 306 180"/>
+              <path class="join" pathLength="1" d="M262 151 C284 151 286 180 306 180"/>
+              <path class="join" pathLength="1" d="M262 216 C284 216 286 180 306 180"/>
+              <path class="join" pathLength="1" d="M262 281 C288 281 284 180 306 180"/>
+              <path class="join out" pathLength="1" d="M398 180 H428"/>
+            </g>
+
+            <circle cx="352" cy="180" r="46" fill="#fff" stroke="url(#artGrad)" stroke-width="3"/>
+            <svg x="330" y="158" width="44" height="44" class="icon art-glyph" aria-hidden="true"><use href="#i-logo"/></svg>
+
+            <rect class="art-out" x="428" y="160" width="64" height="40" rx="14"/>
+            <text class="art-out-text" x="460" y="186" text-anchor="middle">—</text>
+            <text class="art-label" x="460" y="222" text-anchor="middle">score</text>
+
+            <text class="art-note" x="260" y="360" text-anchor="middle">Illustration only. No real data shown.</text>
+          </svg>
+          <figcaption>Understand the patterns. Support student well-being.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- C. How it works -->
+    <section class="section section-alt" id="how-it-works" aria-labelledby="how-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="how-title">How it works</h2>
+          <p>Three steps from your habits to a model-generated estimate. Nothing is stored along the way.</p>
+        </div>
+        <ol class="steps">
+          <li class="step-card">
+            <div class="step-top"><span class="step-num" aria-hidden="true">1</span><span class="step-icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span></div>
+            <h3>Enter Your Information</h3>
+            <p>Provide lifestyle, academic and social media usage details in a short, guided form.</p>
+          </li>
+          <li class="step-card">
+            <div class="step-top"><span class="step-num" aria-hidden="true">2</span><span class="step-icon"><svg class="icon" aria-hidden="true"><use href="#i-cpu"/></svg></span></div>
+            <h3>Machine Learning Analysis</h3>
+            <p>Your validated answers are sent to the FastAPI service, where the trained model processes them.</p>
+          </li>
+          <li class="step-card">
+            <div class="step-top"><span class="step-num" aria-hidden="true">3</span><span class="step-icon"><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg></span></div>
+            <h3>View Your Prediction</h3>
+            <p>See the numerical score the backend returns, exactly as the model produced it.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- D. Prediction form -->
+    <section class="section" id="prediction" aria-labelledby="predict-title">
+      <div class="container narrow">
+        <div class="section-head">
+          <h2 id="predict-title">Predict your score</h2>
+          <p>All twelve fields are required. Answer as accurately as you can for a typical day.</p>
+        </div>
+
+        <div class="form-card" id="form-card">
+          <!-- Progress indicator -->
+          <div class="progress">
+            <div class="progress-row">
+              <span id="progress-label">Form progress</span>
+              <span id="progress-count" aria-hidden="true">0 of 12 complete</span>
+            </div>
+            <div class="bar" role="progressbar" aria-labelledby="progress-label" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0" aria-valuetext="0 of 12 fields complete">
+              <span class="bar-fill" id="progress-fill"></span>
+            </div>
+            <nav class="progress-steps" aria-label="Form sections">
+              <a href="#group-personal" data-group="personal"><span class="dot"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>Personal</a>
+              <a href="#group-social" data-group="social"><span class="dot"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>Social media</a>
+              <a href="#group-lifestyle" data-group="lifestyle"><span class="dot"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>Lifestyle</a>
+              <a href="#group-stress" data-group="stress"><span class="dot"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>Stress</a>
+            </nav>
+          </div>
+
+          <div class="alert" id="form-alert" role="alert" tabindex="-1" hidden></div>
+
+          <form id="predict-form" novalidate autocomplete="off">
+            <div class="form-body" id="form-body">
+
+              <!-- Group 1 -->
+              <div class="group" id="group-personal" role="group" aria-labelledby="g1-title">
+                <div class="group-head">
+                  <span class="group-icon"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>
+                  <div><h3 id="g1-title">Personal information</h3><p>Basic details about you.</p></div>
+                </div>
+                <div class="grid-2">
+                  <div class="field">
+                    <label for="f-age">Age</label>
+                    <input id="f-age" name="age" type="number" inputmode="numeric" min="10" max="100" step="1" placeholder="e.g., 21" required aria-describedby="hint-age err-age">
+                    <p class="hint" id="hint-age">Whole years, from 10 to 100.</p>
+                    <p class="field-error" id="err-age"></p>
+                  </div>
+                  <div class="field">
+                    <label for="f-gender">Gender</label>
+                    <div class="select"><select id="f-gender" name="gender" required aria-describedby="hint-gender err-gender">
+                      <option value="">Select gender</option>
+                      <option>Male</option><option>Female</option>
+                    </select></div>
+                    <p class="hint" id="hint-gender">As recorded in the model's training data.</p>
+                    <p class="field-error" id="err-gender"></p>
+                  </div>
+                  <div class="field">
+                    <label for="f-country">Country</label>
+                    <div class="select"><select id="f-country" name="country" required aria-describedby="hint-country err-country">
+                      <option value="">Select country</option>
+                      <option>Other</option><option>India</option><option>USA</option><option>Canada</option><option>Australia</option>
+                      <option>UK</option><option>Germany</option><option>Mexico</option><option>Turkey</option><option>France</option>
+                    </select></div>
+                    <p class="hint" id="hint-country">Choose “Other” if your country isn't listed.</p>
+                    <p class="field-error" id="err-country"></p>
+                  </div>
+                  <div class="field">
+                    <label for="f-academic_level">Academic level</label>
+                    <div class="select"><select id="f-academic_level" name="academic_level" required aria-describedby="hint-academic_level err-academic_level">
+                      <option value="">Select level</option>
+                      <option>Undergraduate</option><option>Graduate</option><option>High School</option>
+                    </select></div>
+                    <p class="hint" id="hint-academic_level">Your current stage of study.</p>
+                    <p class="field-error" id="err-academic_level"></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Group 2 -->
+              <div class="group" id="group-social" role="group" aria-labelledby="g2-title">
+                <div class="group-head">
+                  <span class="group-icon"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg></span>
+                  <div><h3 id="g2-title">Social media habits</h3><p>How you use social platforms day to day.</p></div>
+                </div>
+                <div class="grid-2">
+                  <div class="field">
+                    <label for="f-most_used_platform">Most used platform</label>
+                    <div class="select"><select id="f-most_used_platform" name="most_used_platform" required aria-describedby="hint-most_used_platform err-most_used_platform">
+                      <option value="">Select platform</option>
+                      <option>Facebook</option><option>LinkedIn</option><option>Instagram</option><option>Snapchat</option>
+                      <option>Twitter</option><option>YouTube</option><option>TikTok</option><option>LINE</option>
+                      <option>KakaoTalk</option><option>VKontakte</option><option>WhatsApp</option><option>WeChat</option>
+                    </select></div>
+                    <p class="hint" id="hint-most_used_platform">The one you open most often.</p>
+                    <p class="field-error" id="err-most_used_platform"></p>
+                  </div>
+                  <div class="field">
+                    <label for="f-purpose_of_use">Purpose of use</label>
+                    <div class="select"><select id="f-purpose_of_use" name="purpose_of_use" required aria-describedby="hint-purpose_of_use err-purpose_of_use">
+                      <option value="">Select purpose</option>
+                      <option>Networking</option><option>Education</option><option>Entertainment</option><option>News</option>
+                    </select></div>
+                    <p class="hint" id="hint-purpose_of_use">Your main reason for using it.</p>
+                    <p class="field-error" id="err-purpose_of_use"></p>
+                  </div>
+                  <div class="field">
+                    <label for="f-avg_daily_usage_hours">Average daily usage (hours)</label>
+                    <input id="f-avg_daily_usage_hours" name="avg_daily_usage_hours" type="number" inputmode="decimal" min="0" max="24" step="0.5" placeholder="e.g., 4.5" required aria-describedby="hint-avg_daily_usage_hours err-avg_daily_usage_hours">
+                    <input class="slider" id="usage-slider" type="range" min="0" max="24" step="0.5" value="0" aria-label="Average daily usage hours, slider" tabindex="0">
+                    <p class="hint" id="hint-avg_daily_usage_hours">Type a value or use the slider (0 to 24).</p>
+                    <p class="field-error" id="err-avg_daily_usage_hours"></p>
+                  </div>
+                  <div class="field">
+                    <label for="f-daily_unlocks">Daily phone unlocks</label>
+                    <input id="f-daily_unlocks" name="daily_unlocks" type="number" inputmode="numeric" min="0" step="1" placeholder="e.g., 50" required aria-describedby="hint-daily_unlocks err-daily_unlocks">
+                    <p class="hint" id="hint-daily_unlocks">Roughly how many times you unlock your phone per day.</p>
+                    <p class="field-error" id="err-daily_unlocks"></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Group 3 -->
+              <div class="group" id="group-lifestyle" role="group" aria-labelledby="g3-title">
+                <div class="group-head">
+                  <span class="group-icon"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg></span>
+                  <div><h3 id="g3-title">Lifestyle habits</h3><p>A typical day, in hours.</p></div>
+                </div>
+                <div class="grid-2">
+                  <div class="field">
+                    <label for="f-study_hours">Study hours</label>
+                    <input id="f-study_hours" name="study_hours" type="number" inputmode="decimal" min="0" max="24" step="0.5" placeholder="e.g., 5" required aria-describedby="hint-study_hours err-study_hours">
+                    <p class="hint" id="hint-study_hours">Hours per day, 0 to 24.</p>
+                    <p class="field-error" id="err-study_hours"></p>
+                  </div>
+                  <div class="field">
+                    <label for="f-physical_activity_hours">Physical activity hours</label>
+                    <input id="f-physical_activity_hours" name="physical_activity_hours" type="number" inputmode="decimal" min="0" max="24" step="0.5" placeholder="e.g., 1" required aria-describedby="hint-physical_activity_hours err-physical_activity_hours">
+                    <p class="hint" id="hint-physical_activity_hours">Exercise or sport, hours per day.</p>
+                    <p class="field-error" id="err-physical_activity_hours"></p>
+                  </div>
+                  <div class="field">
+                    <label for="f-sleep_hours_per_night">Sleep hours per night</label>
+                    <input id="f-sleep_hours_per_night" name="sleep_hours_per_night" type="number" inputmode="decimal" min="0" max="24" step="0.5" placeholder="e.g., 7" required aria-describedby="hint-sleep_hours_per_night err-sleep_hours_per_night">
+                    <p class="hint" id="hint-sleep_hours_per_night">Average hours of sleep.</p>
+                    <p class="field-error" id="err-sleep_hours_per_night"></p>
+                  </div>
+                </div>
+                <p class="field-error group-error" id="err-lifestyle"></p>
+              </div>
+
+              <!-- Group 4 -->
+              <div class="group" id="group-stress" role="group" aria-labelledby="g4-title">
+                <div class="group-head">
+                  <span class="group-icon"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg></span>
+                  <div><h3 id="g4-title">Stress information</h3><p>How stressed you generally feel.</p></div>
+                </div>
+                <div class="grid-2">
+                  <div class="field">
+                    <label for="f-stress_level">Stress level</label>
+                    <div class="select"><select id="f-stress_level" name="stress_level" required aria-describedby="hint-stress_level err-stress_level">
+                      <option value="">Select stress level</option>
+                      <option>Low</option><option>Medium</option><option>High</option><option>Very High</option>
+                    </select></div>
+                    <p class="hint" id="hint-stress_level">Your own sense of your usual stress.</p>
+                    <p class="field-error" id="err-stress_level"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-secondary" type="reset" id="reset-btn">
+                <svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg>Reset Form</button>
+              <button class="btn btn-primary" type="submit" id="submit-btn">
+                <span class="btn-spinner" aria-hidden="true"></span>
+                <span class="btn-label">Predict My Score</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Loading state -->
+          <div class="loading" id="loading" hidden>
+            <div class="loading-inner" role="status" aria-live="polite">
+              <div class="spinner" aria-hidden="true"></div>
+              <p class="loading-title">Analyzing your information...</p>
+              <p class="loading-slow" id="loading-slow" hidden>This is taking longer than usual. If the backend has been idle, Render may be waking it up, which can take up to a minute.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- E. Prediction results (hidden until the API returns a valid score) -->
+    <section class="section results" id="results" aria-labelledby="results-title" hidden>
+      <div class="container narrow">
+        <div class="result-card">
+          <h2 id="results-title" tabindex="-1">Your Prediction Results</h2>
+          <div class="result-body">
+            <div class="gauge" id="gauge" role="img" aria-label="Score visualization">
+              <svg viewBox="0 0 220 220" aria-hidden="true">
+                <defs>
+                  <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#4F46E5"/><stop offset="1" stop-color="#14B8A6"/>
+                  </linearGradient>
+                </defs>
+                <circle class="gauge-track" cx="110" cy="110" r="96"/>
+                <circle class="gauge-fill" id="gauge-fill" cx="110" cy="110" r="96"/>
+              </svg>
+              <div class="gauge-center">
+                <output class="score-value" id="score-value" for="predict-form">0</output>
+                <span class="score-caption">predicted score</span>
+              </div>
+            </div>
+
+            <div class="result-text">
+              <p class="result-kicker">Estimated mental health score</p>
+              <p class="result-explain">
+                This number is a machine learning estimate based only on the information you entered.
+                It reflects patterns the model learned from its training data. It is not a diagnosis,
+                a clinical category, or medical advice.
+              </p>
+              <p class="result-meta" id="score-exact" hidden></p>
+              <p class="result-meta" id="scale-note"></p>
+              <p class="sr-only" id="score-sr" role="status"></p>
+            </div>
+          </div>
+          <div class="result-actions">
+            <button class="btn btn-primary" type="button" id="predict-again">Predict Again</button>
+            <button class="btn btn-secondary" type="button" id="back-to-form">Back to Form</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- F. Privacy and responsible use -->
+    <section class="section note-section" aria-labelledby="note-title">
+      <div class="container narrow">
+        <aside class="note">
+          <span class="note-icon"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg></span>
+          <div>
+            <h2 id="note-title">Privacy and responsible use</h2>
+            <ul>
+              <li>This tool is intended for educational and research purposes.</li>
+              <li>Predictions are estimates, not diagnoses or medical advice.</li>
+              <li>Lifestyle and social media patterns alone cannot establish a person's mental health condition.</li>
+              <li>If you have concerns about your mental health, please reach out to a qualified professional.</li>
+              <li>Your answers are sent only to the prediction service to compute the score. This page does not save them in local storage, cookies or browser history, and does not send them to third-party services.</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- G. Footer -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand brand-light" href="#home" aria-label="MindMetric AI, go to home">
+          <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-logo"/></svg></span>
+          <span class="brand-name">MindMetric AI</span>
+        </a>
+        <p>Built as an educational Machine Learning project.</p>
+      </div>
+      <nav aria-label="Footer">
+        <ul class="footer-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#prediction">Prediction</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="container footer-note">
+      <p>AI-generated estimates are not a substitute for professional assessment.</p>
+    </div>
+  </footer>
+</body>
+</html>
