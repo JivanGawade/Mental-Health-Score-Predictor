@@ -28,7 +28,7 @@
  * While this still holds the placeholder below, the form refuses to send
  * requests and shows a clear configuration message instead.
  */
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = "https://mental-health-score-predictor-e6we.onrender.com";
 
 /** Path of the prediction endpoint on the backend. */
 const PREDICT_PATH = "/predict";
